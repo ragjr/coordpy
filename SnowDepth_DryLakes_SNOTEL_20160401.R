@@ -38,6 +38,10 @@ for(i in 1:length(dataNames)){
   #  dataNames[i] <- subset(dataNames[i], select = c(Latitude, Longitude,altitude,ltime))
 }
 
+# with()
+# within()
+# aggregate()
+
 columnNames <- list("UID", "Time", "Lat", "Long", "Elev")
 addColumns <- data.frame(columnNames)
 
