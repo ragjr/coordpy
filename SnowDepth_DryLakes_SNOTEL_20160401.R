@@ -47,6 +47,11 @@ addColumns <- data.frame(columnNames)
 
 track <- subset(read.csv("./Data_GPS/20160401_surveyGPS/etrex_16Q369520_gps21.txt", header = TRUE, sep = ","), select = c(Latitude,Longitude,altitude,ltime))
 
+track <- within(track,
+                {
+                  ObjectID <- (1:nrow(track))
+                })
+
 track.16Q369520 <- data.frame(etrex_16Q369520_gps21 = rep("None", nrow(etrex_16Q369520_gps21)), etrex_16Q369520_gps21[,])
 track.16Q369520 <- subset(track.16Q369520, select = c(Latitude, Longitude,altitude,ltime))
 
