@@ -18,47 +18,23 @@
 
 ############################ Set working directory and load libraries ############################
 
-setwd("C:/Users/Allen/Google Drive/01_Thesis")
+setwd("C:/Users/Allen/Google Drive/01_Thesis/20160401_DryLakes_Survey")
 
 library(ggplot2)
 library(tidyr)
 
 ############################ Load track files ############################
 
-gps <- "./Data_GPS/20160401_surveyGPS"
-fileNames <- list.files(gps, pattern = "*.txt")
+gpsClean <- ".Data_GPS/Cleaned_SurveyGPS"
+fileNames <- list.files(gpsClean, pattern = "*.txt")
 dataNames <- gsub("[.]txt","",fileNames)
 
-for(i in 1:length(fileNames)){
-  assign(dataNames[i], read.csv(file.path(gps,fileNames[i])))
-}
+# for(i in 1:length(fileNames)){
+#   assign(dataNames[i], read.csv(file.path(gpsClean,fileNames[i])))
+# }
 
-for(i in 1:length(dataNames)){
-  print(i:dataNames[i])
-  #  dataNames[i] <- subset(dataNames[i], select = c(Latitude, Longitude,altitude,ltime))
-}
+tracks <- read.csv("./dataCombined.csv", header = TRUE)
 
 # with()
 # within()
 # aggregate()
-
-columnNames <- list("UID", "Time", "Lat", "Long", "Elev")
-addColumns <- data.frame(columnNames)
-
-track <- subset(read.csv("./Data_GPS/Cleaned_SurveyGPS/etrex_16Q369520_gps21_clean.txt", header = TRUE, sep = ","), select = c(Latitude,Longitude,altitude,ltime))
-
-track <- within(track,
-                {
-                  ObjectID <- (1:nrow(track))
-                })
-
-track.16Q369520 <- data.frame(etrex_16Q369520_gps21 = rep("None", nrow(etrex_16Q369520_gps21)), etrex_16Q369520_gps21[,])
-track.16Q369520 <- subset(track.16Q369520, select = c(Latitude, Longitude,altitude,ltime))
-
-track.3835688390 <- data.frame(etrex10_3835688390_012509 = rep("None", nrow(etrex10_3835688390_012509)), etrex10_3835688390_012509[,])
-
-# for(i in 1:length(dataNames)){
-#   dataNames[i] <- subset(dataNames[i], select = c(Latitude,Longitude,altitude,ltime))
-# }
-
-# I want to subset the new data by select = c(Latitude,Longitude,altitude,ltime)
