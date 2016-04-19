@@ -45,7 +45,7 @@ for(i in 1:length(dataNames)){
 columnNames <- list("UID", "Time", "Lat", "Long", "Elev")
 addColumns <- data.frame(columnNames)
 
-track <- subset(read.csv("./Data_GPS/20160401_surveyGPS/etrex_16Q369520_gps21.txt", header = TRUE, sep = ","), select = c(Latitude,Longitude,altitude,ltime))
+track <- subset(read.csv("./Data_GPS/Cleaned_SurveyGPS/etrex_16Q369520_gps21_clean.txt", header = TRUE, sep = ","), select = c(Latitude,Longitude,altitude,ltime))
 
 track <- within(track,
                 {
