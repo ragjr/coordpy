@@ -161,3 +161,51 @@ plot.comparison <- function(WD,trackData,heartData,elData,uid,area)
 # with()
 # within()
 # aggregate()
+
+#### Calculating between rows ####
+
+df <- data.frame(ID=1:10,Score=4*10:1)
+
+diff(df)
+
+diff(as.matrix(df))
+
+#### remove a row ####
+
+tail(df, -1) - head(df, -1)
+
+#### using apply ####
+
+apply(df, 2, diff)
+apply(df[-1], 2, diff)
+
+#### using data.tables ####
+DT <- data.table(df)
+DT[ , list(ID,Score,Diff=diff(Score))  ]
+
+DT[, lapply(.SD, diff), .SDcols = 1:2]
+
+#### using sql ####
+
+sqldf(paste("SELECT a.ID,a.Score"
+            ,"      , a.Score - (SELECT b.Score"
+            ,"                   FROM df b"
+            ,"                   WHERE b.ID < a.ID"
+            ,"                   ORDER BY b.ID DESC"
+            ,"                   ) diff"
+            ," FROM df a"
+)
+)
+
+df2 <- data.frame(ID=1:10,grp=rep(c("v","w"), each=5),Score=4*10:1)
+
+sqldf(paste("SELECT a.ID,a.grp,a.Score"
+            ,"      , a.Score - (SELECT b.Score"
+            ,"                   FROM df2 b"
+            ,"                   WHERE b.ID < a.ID"
+            ,"                         AND a.grp = b.grp"
+            ,"                   ORDER BY b.ID DESC"
+            ,"                   ) diff"
+            ," FROM df2 a"
+)
+)
