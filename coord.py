@@ -34,3 +34,19 @@ def calcLon(lon):
 ##        calcAng
 ##        calcLat
 ##        calcLon
+
+#coord = lat + ' ' + lon + ' ' + ang
+##for i in range(4):
+##        if (ang + 90) <= 360: ang = ang + 90
+##        else: ang = ang + 90 - 360
+##        lat = lat + (math.sin(math.radians(ang))*dist)
+##        lon = lon + (math.cos(math.radians(ang))*dist)
+##        print ang + lat + lon;
+
+##for i in range(4):
+##        calcAng(i)
+##        print ang
+##        calcLat(i)
+##        print lat
+##        calcLon(i)
+##        print lon
