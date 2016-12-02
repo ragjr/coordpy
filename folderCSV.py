@@ -53,3 +53,17 @@ for table in newTables:
 	arcpy.TableToGeodatabase_conversion(table, db)
 
 ############# Copy geodatabase tables into a PostgreSQL database #############
+# Connect to the production database
+connect = psycopg2.connect(
+    database = 'ecos',
+    user = input('Username: '),
+    password = input('Password: '),
+    host = 'ecos-db-prod.fws.doi.net',
+    port = '5432')
+
+arcpy.env.workspace = db
+dbTables = arcpy.ListTables('*cleanup*')
+
+for table in dbTables:
+	table = ws + table
+	arcpy.TableToGeodatabase_conversion(table, connect)
