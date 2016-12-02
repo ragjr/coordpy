@@ -1,4 +1,4 @@
-import os, csv, arcpy
+import os, csv, arcpy, psycopg2
 
 # Define global variables
 print('User Account: ' + os.environ.get( "USERNAME" ))
@@ -51,3 +51,5 @@ print("Importing tables to gdb: " + db)
 for table in newTables:
 	table = ws + table
 	arcpy.TableToGeodatabase_conversion(table, db)
+
+############# Copy geodatabase tables into a PostgreSQL database #############
