@@ -1,9 +1,13 @@
 import os, csv, arcpy
 
+# Define global variables
+print('User Account: ' + os.environ.get( "USERNAME" ))
+usr = os.environ.get( "USERNAME" )
+
 ############# Create text files with filenames #############
 # metadata
 x = 0
-with open("C:/Users/ragilbert/Documents/metaCleanup.csv", 'wb', 1) as f:
+with open('C:/Users/' + usr + '/Documents/metaCleanup.csv', 'wb', 1) as f:
     print('Creating metaCleanup.csv')
     writer = csv.writer(f)
     writer.writerow(['OBJECTID','filename'])
@@ -14,7 +18,7 @@ with open("C:/Users/ragilbert/Documents/metaCleanup.csv", 'wb', 1) as f:
 
 # zip
 x = 0
-with open("C:/Users/ragilbert/Documents/zipCleanup.csv", 'wb') as f:
+with open('C:/Users/' + usr + '/Documents/zipCleanup.csv', 'wb') as f:
     print('Creating zipCleanup.csv')
     writer = csv.writer(f)
     writer.writerow(['OBJECTID','filename'])
@@ -25,8 +29,8 @@ with open("C:/Users/ragilbert/Documents/zipCleanup.csv", 'wb') as f:
 
 ############# Copy text data into the default geodatabase #############
 # Set local variables to copy 
-ws = 'C:/Users/ragilbert/Documents'
-db = 'C:/Users/ragilbert/Documents/ArcGIS/Default.gdb'
+ws = 'C:/Users/' + usr + '/Documents/'
+db = 'C:/Users/' + usr + '/Documents/ArcGIS/Default.gdb'
 
 # create a list of new tables
 arcpy.env.workspace = ws
@@ -44,4 +48,6 @@ for i in oldTables:
 
 # import both tables
 print("Importing tables to gdb: " + db)
-arcpy.TableToGeodatabase_conversion(newTables, db) # not working
+for table in newTables:
+	table = ws + table
+	arcpy.TableToGeodatabase_conversion(table, db)
