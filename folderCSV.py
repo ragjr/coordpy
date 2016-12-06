@@ -18,7 +18,7 @@ with open('C:/Users/' + usr + '/Documents/metaCleanup.csv', 'wb', 1) as f:
 
 # zip
 x = 0
-with open('C:/Users/' + usr + '/Documents/zipCleanup.csv', 'wb') as f:
+with open('C:/Users/' + usr + '/Documents/zipCleanup.csv', 'wb', 1) as f:
     print('Creating zipCleanup.csv')
     writer = csv.writer(f)
     writer.writerow(['OBJECTID','filename'])
