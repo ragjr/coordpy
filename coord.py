@@ -7,31 +7,26 @@
 import math, os, csv
 
 #################### Create global variables ####################
-lat = 4487619
-lon = 425112
-ang = 260
-dist = 30
+##lat = 4487619
+##lon = 425112
+##ang = 350
+##dist = 30
+
+zone = input('What UTM zone are your coordinates? ')
+lon = input('Initial Easting: ')
+lat = input('Initial Northing: ')
+ang = input('Initial Angle: ') - 90
 
 print('User Account: ' + os.environ.get( "USERNAME" ))
 usr = os.environ.get( "USERNAME" )
 
-#################### Create text files with filenames ####################
-with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
-    print('Creating coordinates.csv')
-    writer = csv.writer(f)
-    writer.writerow(['longitude','latitude'])
-##    for path, dirs, files in os.walk("P:/metadata"):
-##        for filename in files:
-##            x = x + 1
-##            writer.writerow([x,filename])
-
 #################### Calculate four corners of the study site ####################
-for i in range(3):
-        if (ang + 90) <= 360: ang = ang + 90
-        else: ang = ang + 90 - 360
-        lat = lat + (math.sin(math.radians(ang))*dist)
-        lon = lon + (math.cos(math.radians(ang))*dist)
-        print str(int(ang)) + " " + str(int(lat)) + " " + str(int(lon))
+##for i in range(3):
+##        if (ang + 90) <= 360: ang = ang + 90
+##        else: ang = ang + 90 - 360
+##        lat = lat + (math.sin(math.radians(ang))*dist)
+##        lon = lon + (math.cos(math.radians(ang))*dist)
+##        print str(int(ang)) + " " + str(int(lat)) + " " + str(int(lon))
 
 ##def calcAng(ang):
 ##        if (ang + 90) <= 360: ang = ang + 90
@@ -60,33 +55,27 @@ for i in range(3):
 #################### Calculate the interval coordinates ####################
 rg = [14,13,16,14]
 d = [50,30,50,30]
-x = 0
 
-## (d2 * i) is increasing exponentially as it progresses along the total distance.
-
-## Stable
-for r in rg:
-        d2 = float(dist) / r
-        print d2
-        if (ang + 90) <= 360: ang = ang + 90
-        else: ang = ang + 90 - 360
-	for i in range(0,r,1):
-		i = i + 1
-		lat = lat + (math.sin(math.radians(ang)) * (d2 * i))
-                lon = lon + (math.cos(math.radians(ang)) * (d2 * i))
-                print str(int(ang)) + "," + str(int(lat)) + "," + str(int(lon)) + "," + str(int(i * d2))
+## Stable that writes a CSV
+with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
+        print('Creating coordinates.csv')
+        writer = csv.writer(f)
+        writer.writerow(['angle','longitude','latitude','distInput','sub-iteration'])
+        for r in rg:
+            for d2 in d:
+                di = (float(d2) / r)
+                break
+            if (ang + 90) <= 360: ang = ang + 90
+            else: ang = ang + 90 - 360
+            for i in range(0,r,1):
+                lat = lat + (math.sin(math.radians(ang)) * (di))
+                lon = lon + (math.cos(math.radians(ang)) * (di))
+##                writer.writerow([str(int(lat)),str(int(lon)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
+                writer.writerow([str(int(ang)),str(int(lat)),str(int(lon)),zone,str(format(di, '.2f')),str(int(i))])
+        f.close
 
 ## Development
-for r in rg:
-        for d2 in d:
-                di = d2 / r
-                break
-        if (ang + 90) <= 360: ang = ang + 90
-        else: ang = ang + 90 - 360
-	for i in range(0,r,1):
-		lat = lat + (math.sin(math.radians(ang)) * (di))
-                lon = lon + (math.cos(math.radians(ang)) * (di))
-                print str(int(lon)) + "," + str(int(lat))
-##                print str(int(ang)) + "," + str(int(lat)) + "," + str(int(lon)) + "," + str(int(di)) + "," + str(int(i))
-                x = x + 1
-                writer.writerow([x,filename])
+## Implement coordinate conversion using either numPy or pyproj
+        
+
+print('Process Complete')
