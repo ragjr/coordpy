@@ -88,10 +88,10 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
         ## It may be possible to take the initial input, calculate based off a back azimuth and distance.
 ## Calculation is done in a right hand circle only.
 ## Conversion form mils to degrees is mil * 0.05625.
-yes = 'yes'
-no = 'no'
-if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
-else: ang = input('Initial Angle: ') - 90
+    ##yes = 'yes'
+    ##no = 'no'
+    ##if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
+    ##else: ang = input('Initial Angle: ') - 90
 ## Add a method to specify the number of images per line segment.
     ##rg = [1,1,1,1]
     ##rg[0] = input('Image interval: ')
