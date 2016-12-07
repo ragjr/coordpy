@@ -88,8 +88,22 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
         ## It may be possible to take the initial input, calculate based off a back azimuth and distance.
 ## Calculation is done in a right hand circle only.
 ## Conversion form mils to degrees is mil * 0.05625.
+yes = 'yes'
+no = 'no'
+if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
+else: ang = input('Initial Angle: ') - 90
 ## Add a method to specify the number of images per line segment.
+    ##rg = [1,1,1,1]
+    ##rg[0] = input('Image interval: ')
+    ##rg[1] = input('Image interval: ')
+    ##rg[2] = input('Image interval: ')
+    ##rg[3] = input('Image interval: ')
 ## Add a method to specify each line segment distance.
+    ##d = [1,1,1,1]
+    ##d[0] = input('First distance: ')
+    ##d[1] = input('Second distance: ')
+    ##d[2] = input('Third distance: ')
+    ##d[3] = input('Forth distance: ')
 ## Something is going wrong with the di calculation and making the lengths longer than intended.
         ## It looks like it's always us 50 instead of going onto the next index in the list d.
         
