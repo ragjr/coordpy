@@ -7,14 +7,14 @@
 import math, os, csv
 
 #################### Create global variables ####################
-##lat = 4487619
-##lon = 425112
+##northing = 4487619
+##easting = 425112
 ##ang = 350
 ##dist = 30
 
 zone = input('What UTM zone are your coordinates? ')
-lon = input('Initial Easting: ')
-lat = input('Initial Northing: ')
+easting = input('Initial Easting: ')
+northing = input('Initial Northing: ')
 ang = input('Initial Angle: ') - 90
 
 print('User Account: ' + os.environ.get( "USERNAME" ))
@@ -24,31 +24,31 @@ usr = os.environ.get( "USERNAME" )
 ##for i in range(3):
 ##        if (ang + 90) <= 360: ang = ang + 90
 ##        else: ang = ang + 90 - 360
-##        lat = lat + (math.sin(math.radians(ang))*dist)
-##        lon = lon + (math.cos(math.radians(ang))*dist)
-##        print str(int(ang)) + " " + str(int(lat)) + " " + str(int(lon))
+##        northing = northing + (math.sin(math.radians(ang))*dist)
+##        easting = easting + (math.cos(math.radians(ang))*dist)
+##        print str(int(ang)) + " " + str(int(northing)) + " " + str(int(easting))
 
 ##def calcAng(ang):
 ##        if (ang + 90) <= 360: ang = ang + 90
 ##        else: ang = ang + 90 - 360
 ##        return ang;
 
-##def calcLat(lat):
-##        lat = lat + (math.sin(math.radians(ang))*dist)
-##       return lat;
+##def calcLat(northing):
+##        northing = northing + (math.sin(math.radians(ang))*dist)
+##       return northing;
 
-##def calcLon(lon):
-##        lon = lon + (math.cos(math.radians(ang))*dist)
-##        return lon;
+##def calcLon(easting):
+##        easting = easting + (math.cos(math.radians(ang))*dist)
+##        return easting;
 
 
-##def sq(lat,lon,ang,dist):
-##	print str(lat) + ' ' + str(lon) + ' ' + str(ang)
+##def sq(northing,easting,ang,dist):
+##	print str(northing) + ' ' + str(easting) + ' ' + str(ang)
 ##	if (ang + 90) <= 360:
 ##		ang = ang + 90
 ##	else: ang = ang +90 - 360
-##	lat = lat + (math.sin(math.radians(ang))*dist)
-##	lon = lon + (math.cos(math.radians(ang))*dist)
+##	northing = northing + (math.sin(math.radians(ang))*dist)
+##	easting = easting + (math.cos(math.radians(ang))*dist)
 
 ##sq(4487619,425112,350,30)
 
@@ -60,7 +60,7 @@ d = [50,30,50,30]
 with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
         print('Creating coordinates.csv')
         writer = csv.writer(f)
-        writer.writerow(['angle','longitude','latitude','distInput','sub-iteration'])
+        writer.writerow(['angle','easting','northing','distInput','sub-iteration'])
         for r in rg:
             for d2 in d:
                 di = (float(d2) / r)
@@ -68,10 +68,10 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
             if (ang + 90) <= 360: ang = ang + 90
             else: ang = ang + 90 - 360
             for i in range(0,r,1):
-                lat = lat + (math.sin(math.radians(ang)) * (di))
-                lon = lon + (math.cos(math.radians(ang)) * (di))
-##                writer.writerow([str(int(lat)),str(int(lon)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
-                writer.writerow([str(int(ang)),str(int(lat)),str(int(lon)),zone,str(format(di, '.2f')),str(int(i))])
+                easting = easting + (math.cos(math.radians(ang)) * (di))
+                northing = northing + (math.sin(math.radians(ang)) * (di))
+##                writer.writerow([str(int(northing)),str(int(easting)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
+                writer.writerow([str(int(ang)),str(int(easting)),str(int(northing)),zone,str(format(di, '.2f')),str(int(i))])
         f.close
 
 ## Development
