@@ -127,7 +127,7 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
                          str(int(i + 1))])
         f.close
 
-## Development
+## Development items
 ## Implement coordinate conversion using either numPy or pyproj.
 ## This program currently doesn't print out the initial coordinate.
         ## It may be possible to take the initial input, calculate based off a back azimuth and distance.
