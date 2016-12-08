@@ -137,5 +137,7 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
     ##no = 'no'
     ##if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
     ##else: ang = input('Initial Angle: ') - 90
+## Transition table format to Agisoft reference format.
+	## #Label,X/East,Y/North,Z/Altitude,Error_(m),X_error,Y_error,Z_error,X_est,Y_est,Z_est
 
 print('Process Complete')
