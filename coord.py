@@ -7,10 +7,18 @@
 import math, os, csv
 
 #################### Create global variables ####################
+##horticulture farms
 ##northing = 4487619
 ##easting = 425112
-##ang = 135
-##dist = 30
+##ang = 270 degrees
+##dist = varies from 30 to 50 meters
+
+##joe wright
+##northing = 
+##easting = 
+##ang = 135 degrees
+##dist = 30 meters
+print('Note: Calculation is done in a right hand circle only.')
 
 zone = input('What UTM zone are your coordinates? ')
 easting = input('Initial Easting: ')
@@ -53,33 +61,70 @@ usr = os.environ.get( "USERNAME" )
 ##sq(4487619,425112,350,30)
 
 #################### Calculate the interval coordinates ####################
-rg = [14,13,16,14]
-d = [50,30,50,30]
+##rg = [14,13,16,14]
+##d = [50,30,50,30]
 
-## Stable that writes a CSV
+## v1.1 - Stable that writes a CSV
+##with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
+##        print('Creating coordinates.csv')
+##        writer = csv.writer(f)
+##        writer.writerow(['angle','easting','northing','distInput','sub-iteration'])
+##        for r in rg:
+##            for d2 in d:
+##                di = (float(d2) / r)
+##                break
+##            if (ang + 90) <= 360: ang = ang + 90
+##            else: ang = ang + 90 - 360
+##            for i in range(0,r,1):
+##                easting = easting + (math.sin(math.radians(ang)) * (di))
+##                northing = northing + (math.cos(math.radians(ang)) * (di))
+####                writer.writerow([str(int(northing)),str(int(easting)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
+##                writer.writerow(
+##                    [str(int(ang)),
+##                     str(int(easting)),
+##                     str(int(northing)),
+##                     zone,
+##                     r,
+##                     d2,
+##                     str(format(di, '.2f')),
+##                     str(int(i))])
+##        f.close
+
+## v1.2 - Stable that writes a CSV and corrects the following:
+## Add a method to specify the number of images per line segment.
+## Add a method to specify each line segment distance.
+## Something is going wrong with the di calculation and making the lengths longer than intended.
+        ## It looks like it's always us 50 instead of going onto the next index in the list d.
+inputs = []
+
+for i in range(4):
+        rg = input('Image interval: ')
+        d = input('Segment distance: ')
+        inputs.append([rg,d])
+
 with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
         print('Creating coordinates.csv')
         writer = csv.writer(f)
-        writer.writerow(['angle','easting','northing','distInput','sub-iteration'])
-        for r in rg:
-            for d2 in d:
-                di = (float(d2) / r)
-                break
+        writer.writerow(['angle','easting','northing','zone','interval','initialDist','distInput','sub-iteration'])
+        for i in inputs:
+            r = i[0]
+            di = float(i[1]) / r
+            d2 = i[1]
             if (ang + 90) <= 360: ang = ang + 90
             else: ang = ang + 90 - 360
             for i in range(0,r,1):
-                easting = easting + (math.sin(math.radians(ang)) * (di))
-                northing = northing + (math.cos(math.radians(ang)) * (di))
+                    easting = easting + (math.sin(math.radians(ang)) * (di))
+                    northing = northing + (math.cos(math.radians(ang)) * (di))
 ##                writer.writerow([str(int(northing)),str(int(easting)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
-                writer.writerow(
-                    [str(int(ang)),
-                     str(int(easting)),
-                     str(int(northing)),
-                     zone,
-                     r,
-                     d2,
-                     str(format(di, '.2f')),
-                     str(int(i))])
+                    writer.writerow(
+                        [str(int(ang)),
+                         str(format(easting, '.2f')),
+                         str(format(northing, '.2f')),
+                         zone,
+                         r,
+                         d2,
+                         str(format(di, '.2f')),
+                         str(int(i + 1))])
         f.close
 
 ## Development
@@ -92,20 +137,5 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
     ##no = 'no'
     ##if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
     ##else: ang = input('Initial Angle: ') - 90
-## Add a method to specify the number of images per line segment.
-    ##rg = [1,1,1,1]
-    ##rg[0] = input('Image interval: ')
-    ##rg[1] = input('Image interval: ')
-    ##rg[2] = input('Image interval: ')
-    ##rg[3] = input('Image interval: ')
-## Add a method to specify each line segment distance.
-    ##d = [1,1,1,1]
-    ##d[0] = input('First distance: ')
-    ##d[1] = input('Second distance: ')
-    ##d[2] = input('Third distance: ')
-    ##d[3] = input('Forth distance: ')
-## Something is going wrong with the di calculation and making the lengths longer than intended.
-        ## It looks like it's always us 50 instead of going onto the next index in the list d.
-        
 
 print('Process Complete')
