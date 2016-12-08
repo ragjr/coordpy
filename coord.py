@@ -139,5 +139,12 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
     ##else: ang = input('Initial Angle: ') - 90
 ## Transition table format to Agisoft reference format.
 	## #Label,X/East,Y/North,Z/Altitude,Error_(m),X_error,Y_error,Z_error,X_est,Y_est,Z_est
+## Include plotting
+        ## import numpy as np
+        ## import matplotlib.pyplot as plt
+        ## x = np.linspace(0, 4.*np.pi, 33)
+        ## y = np.sin(x)
+        ## plt.plot(x, y)
+        ## plt.show()
 
 print('Process Complete')
