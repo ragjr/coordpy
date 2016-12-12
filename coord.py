@@ -127,24 +127,29 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
                          str(int(i + 1))])
         f.close
 
-## Development items
+## v1.3 - Developing:
 ## Implement coordinate conversion using either numPy or pyproj.
 ## This program currently doesn't print out the initial coordinate.
         ## It may be possible to take the initial input, calculate based off a back azimuth and distance.
 ## Calculation is done in a right hand circle only.
 ## Conversion form mils to degrees is mil * 0.05625.
-    ##yes = 'yes'
-    ##no = 'no'
-    ##if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
-    ##else: ang = input('Initial Angle: ') - 90
+##        yes = 'yes'
+##        no = 'no'
+##        if input('Is your azimuth in mils? ') == yes: ang = int(input('Initial Angle: ') * 0.05625 - 90)
+##        else: ang = input('Initial Angle: ') - 90
 ## Transition table format to Agisoft reference format.
 	## #Label,X/East,Y/North,Z/Altitude,Error_(m),X_error,Y_error,Z_error,X_est,Y_est,Z_est
 ## Include plotting
-        ## import numpy as np
-        ## import matplotlib.pyplot as plt
-        ## x = np.linspace(0, 4.*np.pi, 33)
-        ## y = np.sin(x)
-        ## plt.plot(x, y)
-        ## plt.show()
+##        import numpy as np
+##        import matplotlib.pyplot as plt
+##        with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'r') as f:
+##                x = 
+##                y = 
+##                plt.plot(x, y)
+##                plt.show()
+##        with open('C:/Users/' + usr + '/Documents/coordinates.csv') as f:
+##                rdr = csv.reader(f, delimiter = ',')
+##                for row in rdr:
+##                        print ', '.join(row)
 
 print('Process Complete')
