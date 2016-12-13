@@ -4,7 +4,7 @@
 # Purpose: This program calculates the approximate intervals images were taken at a study sites used during a Colorado Water Institute funded research project that used photogrammetry to derive snow raster surfaces.
 
 #################### Import modules ####################
-import math, os, csv
+import math, os, csv, numpy as np, matplotlib.pyplot as plt
 
 #################### Create global variables ####################
 ##horticulture farms
@@ -18,7 +18,7 @@ import math, os, csv
 ##easting = 
 ##ang = 135 degrees
 ##dist = 30 meters
-print('Note: Calculation is done in a right hand circle only.')
+print('Note: Calculation is performed clock-wise from your initial coordinate.')
 
 zone = input('What UTM zone are your coordinates? ')
 easting = input('Initial Easting: ')
@@ -142,14 +142,14 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
 ## Include plotting
 ##        import numpy as np
 ##        import matplotlib.pyplot as plt
-##        with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'r') as f:
-##                x = 
-##                y = 
-##                plt.plot(x, y)
-##                plt.show()
-##        with open('C:/Users/' + usr + '/Documents/coordinates.csv') as f:
-##                rdr = csv.reader(f, delimiter = ',')
-##                for row in rdr:
-##                        print ', '.join(row)
+with open('C:/Users/' + usr + '/Documents/coordinates.csv') as f:
+        rdr = csv.reader(f, delimiter = ',')
+        f.readline()
+        for row in rdr:
+                x = row[1]
+                y = row[2]
+                plt.scatter(x,y)
+
+plt.show()
 
 print('Process Complete')
