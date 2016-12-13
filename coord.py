@@ -8,16 +8,29 @@ import math, os, csv, numpy as np, matplotlib.pyplot as plt
 
 #################### Create global variables ####################
 ##horticulture farms
-##northing = 4487619
-##easting = 425112
+##easting = 500146 org(500141)
+##northing = 4495706
 ##ang = 270 degrees
 ##dist = varies from 30 to 50 meters
+##rg = [14,13,16,14]
+##d = [40,35,40,35]
+##HortFarms = {
+##        'easting' : '500146',
+##        'northing' : '4495706',
+##        'ang' : '270'
+##        }
 
 ##joe wright
-##northing = 
-##easting = 
-##ang = 135 degrees
-##dist = 30 meters
+##easting = 424973 org(425112)
+##northing = 4487421 org(4487619)
+##ang = 130 - 135 degrees
+##dist = 32 meters
+##JoeWright = {
+##        'easting' : '424973',
+##        'northing' : '4487421',
+##        'ang' : '133'
+##        }
+
 print('Note: Calculation is performed clock-wise from your initial coordinate.')
 
 zone = input('What UTM zone are your coordinates? ')
@@ -61,8 +74,6 @@ usr = os.environ.get( "USERNAME" )
 ##sq(4487619,425112,350,30)
 
 #################### Calculate the interval coordinates ####################
-##rg = [14,13,16,14]
-##d = [50,30,50,30]
 
 ## v1.1 - Stable that writes a CSV
 ##with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
@@ -95,6 +106,39 @@ usr = os.environ.get( "USERNAME" )
 ## Add a method to specify each line segment distance.
 ## Something is going wrong with the di calculation and making the lengths longer than intended.
         ## It looks like it's always us 50 instead of going onto the next index in the list d.
+##inputs = []
+##
+##for i in range(4):
+##        rg = input('Image interval: ')
+##        d = input('Segment distance: ')
+##        inputs.append([rg,d])
+##
+##with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
+##        print('Creating coordinates.csv')
+##        writer = csv.writer(f)
+##        writer.writerow(['angle','easting','northing','zone','interval','initialDist','distInput','sub-iteration'])
+##        for i in inputs:
+##            r = i[0]
+##            di = float(i[1]) / r
+##            d2 = i[1]
+##            if (ang + 90) <= 360: ang = ang + 90
+##            else: ang = ang + 90 - 360
+##            for i in range(0,r,1):
+##                    easting = easting + (math.sin(math.radians(ang)) * (di))
+##                    northing = northing + (math.cos(math.radians(ang)) * (di))
+####                writer.writerow([str(int(northing)),str(int(easting)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
+##                    writer.writerow(
+##                        [str(int(ang)),
+##                         str(format(easting, '.2f')),
+##                         str(format(northing, '.2f')),
+##                         zone,
+##                         r,
+##                         d2,
+##                         str(format(di, '.2f')),
+##                         str(int(i + 1))])
+##        f.close
+
+## v1.3 - Developing:
 inputs = []
 
 for i in range(4):
@@ -113,9 +157,6 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
             if (ang + 90) <= 360: ang = ang + 90
             else: ang = ang + 90 - 360
             for i in range(0,r,1):
-                    easting = easting + (math.sin(math.radians(ang)) * (di))
-                    northing = northing + (math.cos(math.radians(ang)) * (di))
-##                writer.writerow([str(int(northing)),str(int(easting)),zone]) ## Use this for conversion input at http://www.engineeringtoolbox.com/utm-latitude-longitude-d_1370.html 
                     writer.writerow(
                         [str(int(ang)),
                          str(format(easting, '.2f')),
@@ -125,9 +166,11 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
                          d2,
                          str(format(di, '.2f')),
                          str(int(i + 1))])
+                    easting = easting + (math.sin(math.radians(ang)) * (di))
+                    northing = northing + (math.cos(math.radians(ang)) * (di))
+
         f.close
 
-## v1.3 - Developing:
 ## Implement coordinate conversion using either numPy or pyproj.
 ## This program currently doesn't print out the initial coordinate.
         ## It may be possible to take the initial input, calculate based off a back azimuth and distance.
