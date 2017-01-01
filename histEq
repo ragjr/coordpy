@@ -1,0 +1,160 @@
+## Requires converting NEF files to TIF using Nikon's ViewNX-i
+
+import cv2, os, csv
+import Tkinter as tk
+import matplotlib.pyplot as plt
+import numpy as np
+
+ws = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/test/'
+
+root = tk.Tk()
+sw = root.winfo_screenwidth() # screen width
+sh = root.winfo_screenheight() # screen height
+
+# var1 = input('Original Image: ')
+# var2 = input('+1 Exposure: ')
+# var3 = input('+2 Exposure: ')
+
+var1 = ws + 'CSU_3047_cvt.tif'
+var2 = cv2.imread(var1, 1)
+var1 = cv2.imread(var1, 0)
+
+def phist(var):
+    hist,bins = np.histogram(var.flatten(),256,[0,256])
+    cdf = hist.cumsum()
+    cdf_normalized = cdf * hist.max()/ cdf.max()
+    plt.plot(cdf_normalized, color = 'b')
+    plt.hist(var.flatten(),256,[0,256], color = 'r')
+    plt.xlim([0,256])
+    plt.legend(('cdf','histogram'), loc = 'upper left')
+    plt.show()
+
+def compare(var, rf = 10, cl = 2.0, tgs = 8):
+    r1, c1 = var.shape
+    
+    a = cv2.resize(var, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    b = cv2.equalizeHist(cv2.resize(var, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST))
+    clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+    c = clahe.apply(a)
+
+    cv2.imshow('original', a)
+    cv2.imshow('histEq', b)
+    cv2.imshow('CLAHE', c)
+    phist(a)
+    phist(b)
+    phist(c)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+def histProcess(var, cl = 2.0, tgs = 8):
+    var = cv2.imread(ws + var, 0)
+    clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+    var = clahe.apply(var)
+    cv2.imwrite(var.name())
+
+def compare2(var, rf = 10, cl = 2.0, tgs = 8):
+    r1, c1 = var.shape
+    #screen_width
+    #screen_height
+
+    a1 = cv2.resize(var, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    b1 = cv2.equalizeHist(a1)
+    clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+    c1 = clahe.apply(a1)
+    
+    a2 = phist(a1)
+    b2 = phist(b1)
+    c2 = phist(c1)
+    
+    h1 = np.hstack((a1,b1,c1))
+    #h2 = cv2.resize(np.hstack((a2,b2,c2)), (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    #vert = np.vstack((h1,h2))
+    cv2.imshow('all', h1)
+    #phist(res)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+    cv2.imwrite(filename, cv2.CV_IMAGE_PNG_COMPRESSION)
+    
+def compare3(var, rf = 10, cl = 2.0, tgs = 8):
+    c1 = sw
+    r1 = sh
+    
+    a1 = cv2.resize(var, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    
+    b1 = cv2.equalizeHist(var)
+    b1 = cv2.resize(b1, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    
+    clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+    c1 = clahe.apply(var)
+    c1 = cv2.resize(c1, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    
+    a2 = phist(a1)
+    b2 = phist(b1)
+    c2 = phist(c1)
+    
+    h1 = np.hstack((a1,b1,c1))
+    #h2 = cv2.resize(np.hstack((a2,b2,c2)), (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    #vert = np.vstack((h1,h2))
+    cv2.imshow('all', h1)
+    #phist(res)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+##########################################################
+
+import cv2, os, csv
+import Tkinter as tk
+import matplotlib.pyplot as plt
+import numpy as np
+
+WS = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/'
+print(WS)
+
+DIR = WS + input('Input folder? ') #+ '/test/normal/test/'
+print(DIR)
+
+OUTPUT = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/output/'
+OUTPUT= OUTPUT + input('Output folder? ')
+print(OUTPUT)
+
+DIR = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/'
+OUTPUT = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/output/'
+
+DIR = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/normal/'
+OUTPUT = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/output/normal/'
+
+DIR = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/1stopIncrease/'
+OUTPUT = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/output/1stopIncrease/'
+
+DIR = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/2stopIncrease/'
+OUTPUT = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/output/2stopIncrease/'
+
+#ls = ['normal/','1stopIncrease/','2stopIncrease/']
+
+if input('Continue? Yes or No ') == 'Yes':
+    for path, dirs, files in os.walk(DIR):
+#        count = 0
+#        end = ls[count]
+#        pathway = os.mkdir(OUTPUT + end)
+#        count = count + 1
+#        print(pathway)
+        for filename in files:
+            print('Processing: ' + filename)
+            cl = 2.0
+            tgs = 8
+            var = cv2.imread(DIR + filename, 0)
+            clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+            var = clahe.apply(var)
+            cv2.imwrite(OUTPUT + str(filename), var)
+            print('Output to: ' + OUTPUT + str(filename))
+else:
+    print('Stopped')
+
+filename = 'CSU_3044_cvt.TIF'
+cl = 2.0
+tgs = 8
+var = cv2.imread(DIR + filename, 0)
+clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+var = clahe.apply(var)
+cv2.imwrite(OUTPUT + str(filename), var)
+print('Output to: ' + OUTPUT + str(filename))

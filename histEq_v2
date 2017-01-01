@@ -1,0 +1,95 @@
+import cv2, os, csv
+import Tkinter as tk
+import matplotlib.pyplot as plt
+import numpy as np
+
+var = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/test/CSU_2916_cvt.tif'
+img = cv2.imread(var,1)
+
+######################### split and display the individual channels
+rf = 10
+
+b,g,r = cv2.split(img)
+r1, c1 = b.shape
+
+b = cv2.resize(b, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+g = cv2.resize(g, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+r = cv2.resize(r, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+
+h = np.hstack((b,g,r))
+cv2.imshow('all', h)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+######################### applying a histogram equalization
+b,g,r = cv2.split(img)
+r1, c1 = b.shape
+
+b = cv2.equalizeHist(b)
+g = cv2.equalizeHist(g)
+r = cv2.equalizeHist(r)
+
+h = np.hstack((b,g,r))
+cv2.imshow('all', h)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+######################### applying a CLAHE histogram equalization
+cl = 2.0
+tgs = 8
+clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+
+b,g,r = cv2.split(img)
+r1, c1 = b.shape
+
+b = clahe.apply(b)
+g = clahe.apply(g)
+r = clahe.apply(r)
+
+h = np.hstack((b,g,r))
+cv2.imshow('all', h)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+######################### merge the channels into a single image
+img = cv2.merge((b,g,r))
+
+cv2.imshow('all', img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+############################################################## developing functions and a loop
+
+def phist(var):
+    hist,bins = np.histogram(var.flatten(),256,[0,256])
+    cdf = hist.cumsum()
+    cdf_normalized = cdf * hist.max()/ cdf.max()
+    plt.plot(cdf_normalized, color = 'b')
+    plt.hist(var.flatten(),256,[0,256], color = 'r')
+    plt.xlim([0,256])
+    plt.legend(('cdf','histogram'), loc = 'upper left')
+    plt.show()
+
+def compare(var, rf = 10, cl = 2.0, tgs = 8):
+    r1, c1 = var.shape
+
+    img = cv2.resize(cv2.imread(var,1), (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    cv2.cvtColor(img, imgInd, cv2.COLOR_BGR2YCR_CB)
+    cv2.split(imgInd)
+    
+    a1 = cv2.resize(var, (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    b1 = cv2.equalizeHist(a1)
+    clahe = cv2.createCLAHE(clipLimit = cl, tileGridSize = (tgs,tgs))
+    c1 = clahe.apply(a1)
+    
+    a2 = phist(a1)
+    b2 = phist(b1)
+    c2 = phist(c1)
+    
+    h1 = np.hstack((a1,b1,c1))
+    #h2 = cv2.resize(np.hstack((a2,b2,c2)), (c1/rf, r1/rf), 0, 0, cv2.INTER_NEAREST)
+    #vert = np.vstack((h1,h2))
+    cv2.imshow('all', h1)
+    #phist(res)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
