@@ -4,7 +4,7 @@
 # Purpose: This program calculates the approximate intervals images were taken at a study sites used during a Colorado Water Institute funded research project that used photogrammetry to derive snow raster surfaces.
 
 #################### Import modules ####################
-import math, os, csv, numpy as np, matplotlib.pyplot as plt
+import math, os, csv, utm, urllib2, simplejson, numpy as np, matplotlib.pyplot as plt
 
 #################### Create global variables ####################
 ##horticulture farms
@@ -26,7 +26,8 @@ import math, os, csv, numpy as np, matplotlib.pyplot as plt
 ##northing = 4487421 org(4487619)
 ##ang = 130 - 135 degrees
 ##dist = 32 meters
-##el = [,,,]
+##rg = [11,11,10,12]
+##d = [30,30,30,30]
 ##JoeWright = {
 ##        'easting' : '424973',
 ##        'northing' : '4487421',
@@ -35,10 +36,25 @@ import math, os, csv, numpy as np, matplotlib.pyplot as plt
 
 print('Note: Calculation is performed clock-wise from your initial coordinate.')
 
-zone = input('What UTM zone are your coordinates? ')
-easting = input('Initial Easting: ')
-northing = input('Initial Northing: ')
-ang = input('Initial Angle: ') - 90
+#zone = input('What UTM zone are your coordinates? ')
+#easting = input('Initial Easting: ')
+#northing = input('Initial Northing: ')
+#ang = input('Initial Angle: ') - 90
+
+############# Test Inputs
+zone = 13
+easting = 424973
+northing = 4487421
+ang = 133 - 90
+coord = utm.to_latlon(easting, northing, 13, 'N')
+lon = str(format(coord[1],'.5f'))
+lat = str(format(coord[0],'.5f'))
+response = urllib2.urlopen("http://ned.usgs.gov/epqs/pqs.php?x=" + lon + "&y=" + lat + "&units=Meters&output=json")
+data = simplejson.load(response)
+data = data["USGS_Elevation_Point_Query_Service"]
+data = data["Elevation_Query"]
+el = data["Elevation"]
+#############
 
 print('User Account: ' + os.environ.get( "USERNAME" ))
 usr = os.environ.get( "USERNAME" )
@@ -141,91 +157,96 @@ usr = os.environ.get( "USERNAME" )
 ##        f.close
 
 ## v1.3 - Developing:
-##inputs = []
-##
-##for i in range(4):
-##        rg = input('Image interval: ')
-##        d = input('Segment distance: ')
-##        inputs.append([rg,d])
-##
-##with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
-##        print('Creating coordinates.csv')
-##        writer = csv.writer(f)
-##        writer.writerow(['angle','easting','northing','zone','interval','initialDist','distInput','sub-iteration'])
-##        for i in inputs:
-##            r = i[0]
-##            di = float(i[1]) / r
-##            d2 = i[1]
-##            if (ang + 90) <= 360: ang = ang + 90
-##            else: ang = ang + 90 - 360
-##            for i in range(0,r,1):
-##                    writer.writerow(
-##                        [str(int(ang)),
-##                         str(format(easting, '.2f')),
-##                         str(format(northing, '.2f')),
-##                         zone,
-##                         r,
-##                         d2,
-##                         str(format(di, '.2f')),
-##                         str(int(i + 1))])
-##                    easting = easting + (math.sin(math.radians(ang)) * (di))
-##                    northing = northing + (math.cos(math.radians(ang)) * (di))
-##
-##        f.close
+# inputs = []
+
+# for i in range(4):
+       # rg = input('Image interval: ')
+       # d = input('Segment distance: ')
+       # inputs.append([rg,d])
+
+# with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
+       # print('Creating coordinates.csv')
+       # writer = csv.writer(f)
+       # writer.writerow(['angle','easting','northing','zone','interval','initialDist','distInput','sub-iteration'])
+       # for i in inputs:
+           # r = i[0]
+           # di = float(i[1]) / r
+           # d2 = i[1]
+           # if (ang + 90) <= 360: ang = ang + 90
+           # else: ang = ang + 90 - 360
+           # for i in range(0,r,1):
+                   # writer.writerow(
+                       # [str(int(ang)),
+                        # str(format(easting, '.2f')),
+                        # str(format(northing, '.2f')),
+                        # zone,
+                        # r,
+                        # d2,
+                        # str(format(di, '.2f')),
+                        # str(int(i + 1))])
+                   # easting = easting + (math.sin(math.radians(ang)) * (di))
+                   # northing = northing + (math.cos(math.radians(ang)) * (di))
+       # f.close
 
 ## v1.4 - Developing:
 
 inputs = []
 
-DIR = input('Which directory do you want to examine? ')
+# DIR = input('Which directory do you want to examine? ')
+DIR = 'C:/Users/rallengilbertjr/Desktop/CoursenessCoefficient/20161224/nikon_d810/tif/1stopIncrease/'
 
 with open('C:/Users/' + usr + '/Documents/filenames.csv', 'wb', 1) as f:
     print('Creating filenames.csv')
     writer = csv.writer(f)
     writer.writerow(['filename'])
     for path, dirs, files in os.walk(DIR):
-        for filename in files:
-            writer.writerow([filename])
+       for filename in files:
+          writer.writerow([filename])
+    f.close
 
-files = open('C:/Users/' + usr + '/Documents/filenames.csv')
+# files = open('C:/Users/' + usr + '/Documents/filenames.csv')
 
 for i in range(4):
-        rg = input('Image interval: ')
-        d = input('Segment distance: ')
-##        el = input('Point elevation: ')
-        inputs.append([rg,d,el])
+    rg = input('Image interval: ')
+    d = input('Segment distance: ')
+    inputs.append([rg,d])
+print(inputs)
 
-        with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
-                print('Creating coordinates.csv')
-                writer = csv.writer(f)
-                writer.writerow(['#Label','X/East','Y/North','Z/Altitude','Error_(m)','X_error','Y_error','Z_error','X_est','Y_est','Z_est'])
-##                el1 = i[
-                for i in inputs:
-                        for filename in files:
-                                fi = filename
-                        r = i[0]
-                        di = float(i[1]) / r
-                        d2 = i[1]
-##                        el = 
-                        if (ang + 90) <= 360: ang = ang + 90
-                        else: ang = ang + 90 - 360
-                        for i in range(0,r,1):
-                            writer.writerow(
-                                [fi,
-                                 str(format(easting, '.2f')),
-                                 str(format(northing, '.2f')),
-##                                 el,
-                                 '',
-                                 '3.28',
-                                 '',
-                                 '',
-                                 '',
-                                 '',
-                                 '',
-                                 '',])
-                            easting = easting + (math.sin(math.radians(ang)) * (di))
-                            northing = northing + (math.cos(math.radians(ang)) * (di))
-
+with open('C:/Users/' + usr + '/Documents/coordinates.csv', 'wb', 1) as f:
+        print('Creating coordinates.csv')
+        writer = csv.writer(f)
+        writer.writerow(['#Label','X/East','Y/North','Z/Altitude','Error_(m)','X_error','Y_error','Z_error','X_est','Y_est','Z_est'])
+        for i in inputs:
+            r = i[0]
+            di = float(i[1]) / r
+            # d2 = i[1]
+            if (ang + 90) <= 360: ang = ang + 90
+            else: ang = ang + 90 - 360
+            # for filename in files:
+            # for files in os.walk(DIR):
+            for i in range(0,r,1):
+                writer.writerow(
+                    ['',
+                    lon,
+                    lat,
+                    str(el),
+                    '3.28',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',])
+                easting = easting + (math.sin(math.radians(ang)) * (di))
+                northing = northing + (math.cos(math.radians(ang)) * (di))
+                coord = utm.to_latlon(easting, northing, 13, 'N')
+                lon = str(format(coord[1],'.5f'))
+                lat = str(format(coord[0],'.5f'))
+                response = urllib2.urlopen("http://ned.usgs.gov/epqs/pqs.php?x=" + lon + "&y=" + lat + "&units=Meters&output=json")
+                data = simplejson.load(response)
+                data = data["USGS_Elevation_Point_Query_Service"]
+                data = data["Elevation_Query"]
+                el = data["Elevation"]
         f.close
 
 ## Implement coordinate conversion using either numPy or pyproj.
@@ -249,7 +270,23 @@ with open('C:/Users/' + usr + '/Documents/coordinates.csv') as f:
                 x = row[1]
                 y = row[2]
                 plt.scatter(x,y)
+                #print(x,y)
 
 plt.show()
+
+########## Convert UTM to LatLon ##########
+#import utm
+#utm.to_latlon(424975, 4487426, 13, 'N') #example
+#utm.to_latlon(easting, northing, 13, 'N')
+
+########## Get Elevation from USGS 3DEP 1/3 arc-second resolution ##########
+#import urllib2, simplejson
+#x = str(-105.052810)
+#y = str(40.551005)
+#response = urllib2.urlopen("http://ned.usgs.gov/epqs/pqs.php?x=" + x + "&y=" + y + "&units=Meters&output=json")
+#data = simplejson.load(response)
+#data = data["USGS_Elevation_Point_Query_Service"]
+#data = data["Elevation_Query"]
+#print data["Elevation"]
 
 print('Process Complete')
