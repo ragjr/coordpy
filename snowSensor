@@ -1,0 +1,97 @@
+/*
+Title: Snow Sensor
+Purpose: This program and sensor package are written to detect the depth of snow and provide air temperature for adjustment during post processing.
+Version: 2.2
+Used to read MaxSonar MB7060 & Dallas temperature sensors
+Written for Arduino Nano
+Reading Pin0 output
+Created by: R. Allen Gilbert Jr.
+Created on: 20161210
+*/
+// https://milesburton.com/Dallas_Temperature_Control_Library
+// https://github.com/bigjosh/OneWireNoResistor/blob/ebba80cf61920aef399efa252826b1b59feb6589/OneWire/OneWire.cpp
+// https://www.hacktronics.com/Tutorials/arduino-1-wire-tutorial.html
+// https://www.hacktronics.com/Tutorials/arduino-1-wire-address-finder.html
+#include <SPI.h>
+#include <SD.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <LightChrono.h>
+
+const int anPin = 0;
+#define ONE_WIRE_BUS 6
+long anVolt,cm;
+static int counter = 0;
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+DeviceAddress temp = { 0x28, 0x66, 0xEA, 0x4C, 0x02, 0x00, 0x00, 0xB5 };
+
+const int chipSelect = 7;
+
+LightChrono myChrono;
+
+void setup() {
+  sensors.begin();  
+  sensors.setResolution(temp,10);
+  SD.begin(chipSelect);
+  myChrono.restart();
+}
+
+void loop() {
+  // make a string for assembling the data to log:
+  String headerString = "";
+  String dataString = "";
+
+  if(counter == 0)
+  {
+    // construct and write a header to datalog.txt
+    //File dataFile = SD.open("datalog.txt", FILE_WRITE);
+    File dataFile = SD.open("datalog.txt", O_CREAT | O_APPEND | O_WRITE);
+    headerString = "Depth[cm],Temperature[C],Time[ms]";
+
+    // if the file is available, write to it:
+    if(dataFile)
+    {
+      dataFile.println(headerString);
+      dataFile.flush();
+      dataFile.close();
+    }
+    // if the file isn't open, pop up an error:
+    else
+    {
+      dataFile.println("error opening datalog.txt during header");
+    }
+    counter++;
+  }
+  else
+  {
+    // read sensors and write them to datalog.txt
+    anVolt = analogRead(anPin);
+    float cm = anVolt * 1.1;
+    sensors.requestTemperatures();
+    float cel = sensors.getTempC(temp);
+    unsigned long time = myChrono.elapsed();
+  
+    dataString = String(cm) + "," + String(cel) + "," + String(time);
+    // open the file. note that only one file can be open at a time,
+    // so you have to close this one before opening another.
+    //File dataFile = SD.open("datalog.txt", FILE_WRITE);
+    File dataFile = SD.open("datalog.txt", O_CREAT | O_APPEND | O_WRITE);
+  
+    // if the file is available, write to it:
+    if (dataFile)
+    {
+      dataFile.println(dataString);
+      dataFile.flush();
+      dataFile.close();
+    }
+    // if the file isn't open, pop up an error:
+    else
+    {
+      dataFile.println("error opening datalog.txt");
+    }
+    // delay 5 minutes
+    delay(300000);
+  }
+}
